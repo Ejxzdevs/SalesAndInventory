@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import AddProduct from './modals/addProduct'; 
 
 interface Product {
   product_id: number;
@@ -11,6 +12,14 @@ const Products = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [isPopupVisible, setPopupVisible] = useState(true);
+
+  const closePopup = ()=> {
+    setPopupVisible(false);
+  }
+  const openPopup = () => {
+    setPopupVisible(true);
+  }
 
   useEffect(() => {
     fetchProducts();
@@ -39,7 +48,9 @@ const Products = () => {
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
+    <AddProduct trigger={isPopupVisible} onClose={closePopup} /> 
       <table className="w-3/4 border border-gray-300 shadow-lg">
+      <button onClick={openPopup} >open</button>
         <thead className="bg-gray-200">
           <tr>
             <th className="p-4 border-b">ID</th>
@@ -51,7 +62,7 @@ const Products = () => {
         </thead>
         <tbody>
           {products.map(product => (
-            <tr key={product.id} className="hover:bg-gray-50">
+            <tr key={product.product_id} className="hover:bg-gray-50">
               <td className="p-4 border-b text-center">{product.product_id}</td>
               <td className="p-4 border-b text-center">{product.product_name}</td>
               <td className="p-4 border-b text-center">{product.category}</td>

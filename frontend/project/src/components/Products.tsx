@@ -9,48 +9,51 @@ interface Product {
 }
 
 const Products = () => {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const [isPopupVisible, setPopupVisible] = useState(true);
+const [products, setProducts] = useState<Product[]>([]);
+const [loading, setLoading] = useState<boolean>(true);
+const [error, setError] = useState<string | null>(null);
+const [isPopupVisible, setPopupVisible] = useState(false);
 
-  const closePopup = ()=> {
+const closePopup = ()=> {
     setPopupVisible(false);
   }
-  const openPopup = () => {
+const openPopup = () => {
     setPopupVisible(true);
   }
 
   useEffect(() => {
     fetchProducts();
-  }, []);
+  },[]);
 
-  const fetchProducts = async () => {
+const fetchProducts = async () => 
+  {
     try {
       const response = await fetch('http://127.0.0.1:8000/api/products/');
       if (!response.ok) throw new Error('Network response was not ok');
-      const data: Product[] = await response.json();
-      setProducts(data);
-    } catch (error) {
-      setError((error as Error).message);
-    } finally {
-      setLoading(false);
-    }
+        const data: Product[] = await response.json();
+          setProducts(data);
+      }catch (error) {
+        setError((error as Error).message);
+      }finally {
+        setLoading(false);
+      }
   };
+
+
 
   if (loading) {
     return <div className="flex justify-center items-center h-screen">Loading...</div>;
   }
-
   if (error) {
     return <div className="flex justify-center items-center h-screen text-red-500">{error}</div>;
   }
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
+            <button onClick={openPopup} >open</button>
     <AddProduct trigger={isPopupVisible} onClose={closePopup} /> 
       <table className="w-3/4 border border-gray-300 shadow-lg">
-      <button onClick={openPopup} >open</button>
+
         <thead className="bg-gray-200">
           <tr>
             <th className="p-4 border-b">ID</th>

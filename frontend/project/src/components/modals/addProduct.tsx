@@ -59,6 +59,7 @@ const AddProduct: React.FC<AddProductProps> = ({ trigger, onClose }) => {
                 cost: 0,
                 quantity_in_stock: 0,
             });
+            window.location.reload();
 
         } catch (error) {
             console.error('Error adding product:', error);

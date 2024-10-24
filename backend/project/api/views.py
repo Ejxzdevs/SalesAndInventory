@@ -18,3 +18,12 @@ def createProduct(request):
         serializeData.save()
         return Response(serializeData.data ,status=status.HTTP_201_CREATED)
     return Response(serializeData.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['DELETE'])
+def deleteProduct(request, id):
+    try:
+        product = Product.objects.get(product_id=id)
+        product.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    except Product.DoesNotExist:
+        return Response({'error': 'Product not found'}, status=status.HTTP_404_NOT_FOUND)

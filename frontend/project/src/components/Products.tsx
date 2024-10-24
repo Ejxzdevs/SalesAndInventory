@@ -14,6 +14,7 @@ const [loading, setLoading] = useState<boolean>(true);
 const [error, setError] = useState<string | null>(null);
 const [isPopupVisible, setPopupVisible] = useState(false);
 
+// for pop up modal
 const closePopup = ()=> {
     setPopupVisible(false);
   }
@@ -21,10 +22,12 @@ const openPopup = () => {
     setPopupVisible(true);
   }
 
+// execute fetch method once 
   useEffect(() => {
     fetchProducts();
   },[]);
 
+// display products
 const fetchProducts = async () => 
   {
     try {
@@ -38,6 +41,21 @@ const fetchProducts = async () =>
         setLoading(false);
       }
   };
+
+// delete product 
+const deleteProduct = async (id: number)=> {
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/api/products/delete/${id}/`, {
+      method: 'DELETE'
+    });
+    if (!response.ok) throw new Error('Failed to delete product');
+    setProducts(prevProducts => prevProducts.filter(product => product.product_id !== id));
+    }catch (error) {
+      setError((error as Error).message);
+    }finally {
+      setLoading(false);
+    }
+}
 
 
 
@@ -72,7 +90,10 @@ const fetchProducts = async () =>
               <td className="p-4 border-b text-center">{product.price}</td>
               <td className="p-4 border-b text-center">
                 <button className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition duration-200">Edit</button>
-                <button className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition duration-200 ml-2">Delete</button>
+                <button className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition duration-200 ml-2"
+                onClick={ ()=> deleteProduct(product.product_id) }
+                
+                >Delete</button>
               </td>
             </tr>
           ))}
